@@ -83,11 +83,11 @@ config.keys = {
 			end),
 		}),
 	},
-	{
-		key = "s",
-		mods = "CTRL|SHIFT",
-		action = act({ EmitEvent = "save_session" }),
-	},
+	-- {
+	-- 	key = "s",
+	-- 	mods = "CTRL|SHIFT",
+	-- 	action = act({ EmitEvent = "save_session" }),
+	-- },
 	{
 		key = "l",
 		mods = "CTRL|SHIFT",
@@ -108,6 +108,23 @@ config.keys = {
 		mods = "CTRL|SHIFT",
 		action = act({ EmitEvent = "edit_session" }),
 	},
+
+	{
+		key = "h",
+		mods = "CTRL",
+		action = act.AdjustPaneSize({ "Left", 5 }),
+	},
+	{
+		key = "j",
+		mods = "CTRL",
+		action = act.AdjustPaneSize({ "Down", 5 }),
+	},
+	{ key = "k", mods = "CTRL", action = act.AdjustPaneSize({ "Up", 5 }) },
+	{
+		key = "l",
+		mods = "CTRL",
+		action = act.AdjustPaneSize({ "Right", 5 }),
+	},
 }
 
 config.default_workspace = "~"
@@ -123,6 +140,20 @@ wezterm.on("update-right-status", function(window, pane)
 	-- Show active workspace in right status
 	local workspace = window:active_workspace()
 	window:set_right_status("🌐 " .. workspace)
+end)
+
+-- Auto-save session every 5 minutes (300 seconds)
+wezterm.on("gui-startup", function(window)
+	wezterm.time.call_after(300, function()
+		wezterm.emit("save_session")
+	end)
+end)
+
+-- Re-trigger the timer every time a save happens to create a loop
+wezterm.on("save_session", function(window)
+	wezterm.time.call_after(300, function()
+		wezterm.emit("save_session")
+	end)
 end)
 
 -- and finally, return the configuration to wezterm
