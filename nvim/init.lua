@@ -15,6 +15,7 @@ require("plugins.vim-tmux-navigator")
 -- end
 -- Transparent()
 
+-- added transparency to background
 function Transparent(color)
   color = color or "tokyonight"
   vim.cmd.colorscheme(color)
