@@ -7,6 +7,7 @@ local sessions = wezterm.plugin.require("https://github.com/abidibo/wezterm-sess
 local config = wezterm.config_builder()
 
 local act = wezterm.action
+local mux = wezterm.mux
 
 -- This is where you actually apply your config choices
 
@@ -160,6 +161,12 @@ wezterm.on("save_session", function(window)
 	wezterm.time.call_after(300, function()
 		wezterm.emit("save_session")
 	end)
+end)
+
+-- show fullscreen on load
+wezterm.on("gui-startup", function()
+	local tab, pane, window = mux.spawn_window({})
+	window:gui_window():maximize()
 end)
 
 -- and finally, return the configuration to wezterm
